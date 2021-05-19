@@ -41,9 +41,9 @@ function drawChart() {
 
     var margin = {
         top: 20,
-        right: 20,
-        bottom: 30,
-        left: 20
+        right: 50,
+        bottom: 50,
+        left: 50
     };
 
     // chart area minus margins
@@ -77,6 +77,19 @@ function drawChart() {
     // set y to the y axis
     chartGroup.append("g")
         .call(yAxis);
+
+    // Add X axis label:
+    svg.append("text")
+        .attr("x", chartWidth/1.9)
+        .attr("y", chartHeight + margin.top + 35)
+        .text(`${selection.x}`);
+
+    // Y axis label:
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 16)
+        .attr("x", -(chartHeight - margin.top - 60))
+        .text(`${selection.y}`)
 
     // set x to the bottom of the chart
     chartGroup.append("g")
