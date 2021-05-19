@@ -98,7 +98,7 @@ function drawChart() {
     
     /* Define the data for the circles */
     var elem = chartGroup.selectAll("circle")
-    .data(dataArray);
+        .data(dataArray);
 
     /*Create a container for each circle */  
     var elemEnter = elem.enter()
@@ -109,8 +109,16 @@ function drawChart() {
         .attr("cx", d => xScale(d[selection.x]))
         .attr("cy", d => yScale(d[selection.y]))
         .attr("r", 15)
-        .attr("fill", "pink")
+        .attr("fill", "#158cba")
         .attr("opacity", ".6");
+
+    /* Create the text for each entry */
+    elemEnter.append("text")
+        .attr("x", d => xScale(d[selection.x]))
+        .attr("y", d => yScale(d[selection.y]))
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .text(function(d){return d.abbr});
 
     var toolTip = d3.tip()
 	    .attr("class", "tooltip")
@@ -121,7 +129,7 @@ function drawChart() {
 
     /* Create the tooltip for each entry */
     elemEnter.call(toolTip);
-    
+
     elemEnter
 		.on("mouseover", function(d) {
 		    toolTip.show(d, this);
@@ -129,13 +137,5 @@ function drawChart() {
 		.on("mouseout", function(d, index) {
 		    toolTip.hide(d, this);
 		});
-
-    /* Create the text for each entry */
-    elemEnter.append("text")
-    .attr("x", d => xScale(d[selection.x]))
-    .attr("y", d => yScale(d[selection.y]))
-    .attr("text-anchor", "middle")
-    .attr("alignment-baseline", "middle")
-    .text(function(d){return d.abbr});
 
 }
