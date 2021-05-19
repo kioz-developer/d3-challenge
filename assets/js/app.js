@@ -1,12 +1,17 @@
 var dataArray = [];
 var dataAxisY = [];
 var dataAxisX = [];
+var selection = {
+    'y': 'healthcare',
+    'x': 'poverty'
+};
+
 
 d3.csv("assets/data/data.csv").then(function(csvData) {
     dataArray = csvData;
 
-    dataAxisY = dataArray.map(d => +d.healthcare);
-    dataAxisX = dataArray.map(d => +d.poverty);
+    dataAxisY = dataArray.map(d => +d[selection.y]);
+    dataAxisX = dataArray.map(d => +d[selection.x]);
 
     drawChart();
     
@@ -78,14 +83,28 @@ function drawChart() {
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(xAxis);
     
-    // append initial circles
-    var circlesGroup = chartGroup.selectAll("circle")
-        .data(dataArray)
-        .enter()
-        .append("circle")
-        .attr("cx", d => xScale(d.poverty))
-        .attr("cy", d => yScale(d.healthcare))
-        .attr("r", 15)
-        .attr("fill", "pink")
-        .attr("opacity", ".6");
+    /* Define the data for the circles */
+    var elem = chartGroup.selectAll("circle")
+    .data(dataArray);
+
+    /*Create a container for each circle */  
+    var elemEnter = elem.enter()
+        .append("g");
+
+    /* Create a circle for each entry */
+    var circle = elemEnter.append("circle")
+    .attr("cx", d => xScale(d[selection.x]))
+    .attr("cy", d => yScale(d[selection.y]))
+    .attr("r", 15)
+    .attr("fill", "pink")
+    .attr("opacity", ".6");
+
+    /* Create the text for each entry */
+    elemEnter.append("text")
+    .attr("x", d => xScale(d[selection.x]))
+    .attr("y", d => yScale(d[selection.y]))
+    .attr("text-anchor", "middle")
+    .attr("alignment-baseline", "middle")
+    .text(function(d){return d.abbr});
+
 }
