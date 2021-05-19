@@ -29,3 +29,8 @@ body {
   margin: 0;
   font-size: 16px;
 }
+
+.chart {
+  background-color: rgb(248, 238, 224);
+  height: 400px;
+}
