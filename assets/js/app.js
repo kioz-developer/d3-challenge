@@ -1,20 +1,20 @@
 var dataArray = [];
-var dataHealthcare = [];
-var dataPoverty = [];
+var dataAxisY = [];
+var dataAxisX = [];
 
 d3.csv("assets/data/data.csv").then(function(csvData) {
     dataArray = csvData;
 
-    dataHealthcare = dataArray.map(d => +d.healthcare);
-    dataPoverty = dataArray.map(d => +d.poverty);
+    dataAxisY = dataArray.map(d => +d.healthcare);
+    dataAxisX = dataArray.map(d => +d.poverty);
 
     drawChart();
     
-    //console.log(dataHealthcare);
-    //console.log("dataHealthcare: " + d3.max(dataHealthcare));
+    //console.log(dataAxisY);
+    //console.log("dataAxisY: " + d3.max(dataAxisY));
 
-    //console.log(dataPoverty);
-    //console.log("dataPoverty: " + d3.max(dataPoverty));
+    //console.log(dataAxisX);
+    //console.log("dataAxisX: " + d3.max(dataAxisX));
 }).catch(function(error) {
     console.log(error);
 });
@@ -56,12 +56,12 @@ function drawChart() {
 
     // scale y to chart height
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(dataHealthcare)])
+        .domain([0, d3.max(dataAxisY)])
         .range([chartHeight, 0]);
 
     // scale x to chart width
     var xScale = d3.scaleBand()
-        .domain(dataPoverty)
+        .domain(dataAxisX)
         .range([0, chartWidth])
         .padding(0.5);
 
@@ -78,5 +78,14 @@ function drawChart() {
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(xAxis);
     
-    
+    // append initial circles
+    var circlesGroup = chartGroup.selectAll("circle")
+        .data(dataArray)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(d.poverty))
+        .attr("cy", d => yScale(d.healthcare))
+        .attr("r", 15)
+        .attr("fill", "pink")
+        .attr("opacity", ".6");
 }
