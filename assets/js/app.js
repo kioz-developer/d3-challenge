@@ -106,11 +106,29 @@ function drawChart() {
 
     /* Create a circle for each entry */
     var circle = elemEnter.append("circle")
-    .attr("cx", d => xScale(d[selection.x]))
-    .attr("cy", d => yScale(d[selection.y]))
-    .attr("r", 15)
-    .attr("fill", "pink")
-    .attr("opacity", ".6");
+        .attr("cx", d => xScale(d[selection.x]))
+        .attr("cy", d => yScale(d[selection.y]))
+        .attr("r", 15)
+        .attr("fill", "pink")
+        .attr("opacity", ".6");
+
+    var toolTip = d3.tip()
+	    .attr("class", "tooltip")
+	    .offset([-10, 0])
+	    .html(function(d) {
+	      return (`${d.state}<br>Poverty: ${d.poverty}%<br>Obesity: ${d.obesity}%`);
+	    });
+
+    /* Create the tooltip for each entry */
+    elemEnter.call(toolTip);
+    
+    elemEnter
+		.on("mouseover", function(d) {
+		    toolTip.show(d, this);
+		})
+		.on("mouseout", function(d, index) {
+		    toolTip.hide(d, this);
+		});
 
     /* Create the text for each entry */
     elemEnter.append("text")

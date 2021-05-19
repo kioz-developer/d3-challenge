@@ -38,3 +38,33 @@ body {
 .info {
   margin-bottom: 20px;
 }
+
+.tooltip {
+  position: absolute;
+  width: 110px;
+  height: 60px;
+  padding: 2px;
+  padding-top: 8px;
+  font: 12px sans-serif;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.9);
+  border: 0;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.tooltip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.9);
+  top: 59px;
+  left: 0px;
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
