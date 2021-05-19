@@ -51,8 +51,8 @@ function drawChart() {
     var margin = {
         top: 20,
         right: 50,
-        bottom: 50,
-        left: 50
+        bottom: 80,
+        left: 90
     };
 
     // chart area minus margins
@@ -88,17 +88,30 @@ function drawChart() {
         .call(yAxis);
 
     // Add X axis label:
-    svg.append("text")
-        .attr("x", chartWidth/1.9)
-        .attr("y", chartHeight + margin.top + 35)
-        .text(`${selection.xLabel[selection.x]}`);
+    var xDist = 35;
+    Object.keys(selection.xLabel).forEach(d => {
+        svg.append("text")
+            .classed(selection.x == d ? 'active' : "inactive", true)
+            .attr("x", chartWidth/1.9)
+            .attr("y", chartHeight + margin.top + xDist)
+            .text(`${selection.xLabel[d]}`);
+        
+        xDist = xDist + 20;
+    });
 
     // Y axis label:
-    svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 16)
-        .attr("x", -(chartHeight - margin.top - 60))
-        .text(`${selection.yLabel[selection.y]}`)
+    var yDist = 16;
+    Object.keys(selection.yLabel).forEach(d => {
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("text-anchor", "middle")
+            .classed(selection.y == d ? 'active' : "inactive", true)
+            .attr("y", yDist)
+            .attr("x", -(chartHeight/2))
+            .text(`${selection.yLabel[d]}`);
+        
+        yDist = yDist + 20;
+    });
 
     // set x to the bottom of the chart
     chartGroup.append("g")
