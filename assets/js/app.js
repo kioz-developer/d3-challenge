@@ -3,9 +3,18 @@ var dataAxisY = [];
 var dataAxisX = [];
 var selection = {
     'y': 'healthcare',
-    'x': 'poverty'
+    'x': 'poverty',
+    'yLabel': {
+        'obesity': 'Obese (%)',
+        'smokes': 'Smokes (%)',
+        'healthcare': 'Lacks Healthcare (%)'
+    }, 
+    'xLabel': {
+        'poverty': 'In Poverty (%)',
+        'age': 'Age (Median)',
+        'income': 'Household Income (Median)'
+    }
 };
-
 
 d3.csv("assets/data/data.csv").then(function(csvData) {
     dataArray = csvData;
@@ -82,14 +91,14 @@ function drawChart() {
     svg.append("text")
         .attr("x", chartWidth/1.9)
         .attr("y", chartHeight + margin.top + 35)
-        .text(`${selection.x}`);
+        .text(`${selection.xLabel[selection.x]}`);
 
     // Y axis label:
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 16)
         .attr("x", -(chartHeight - margin.top - 60))
-        .text(`${selection.y}`)
+        .text(`${selection.yLabel[selection.y]}`)
 
     // set x to the bottom of the chart
     chartGroup.append("g")
