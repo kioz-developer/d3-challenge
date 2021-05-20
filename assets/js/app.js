@@ -16,33 +16,30 @@ var selection = {
     }
 };
 
+// Fetch csv file
 d3.csv("assets/data/data.csv").then(function(csvData) {
     dataArray = csvData;
-
-    dataAxisY = dataArray.map(d => +d[selection.y]);
-    dataAxisX = dataArray.map(d => +d[selection.x]);
-
-    drawChart();
-    
-    //console.log(dataAxisY);
-    //console.log("dataAxisY: " + d3.max(dataAxisY));
-
-    //console.log(dataAxisX);
-    //console.log("dataAxisX: " + d3.max(dataAxisX));
+    drawResponsiveChart();
 }).catch(function(error) {
     console.log(error);
 });
 
 // Event listener for window resize.
-// When the browser window is resized, drawChart() is called.
-d3.select(window).on("resize", drawChart);
+// When the browser window is resized, drawResponsiveChart() is called.
+d3.select(window).on("resize", drawResponsiveChart);
 
-function drawChart() {
+// Function to draw the responsive chart
+function drawResponsiveChart() {
     var svgArea = d3.select("#scatter").select("svg");
 
     if (!svgArea.empty()) {
         svgArea.remove();
     }
+
+    // Selecting data
+    console.log(`Crossing ${selection.y} with ${selection.x}`)
+    dataAxisY = dataArray.map(d => +d[selection.y]);
+    dataAxisX = dataArray.map(d => +d[selection.x]);
 
     // svg params
     var svgHeight = 400;
@@ -91,9 +88,12 @@ function drawChart() {
     var xDist = 35;
     Object.keys(selection.xLabel).forEach(d => {
         svg.append("text")
+            .data(d)
             .classed(selection.x == d ? 'active' : "inactive", true)
-            .attr("x", chartWidth/1.9)
+            .attr("x", (chartWidth/2) + margin.left)
             .attr("y", chartHeight + margin.top + xDist)
+            .attr("value", d)
+            .attr("axis", "x")
             .text(`${selection.xLabel[d]}`);
         
         xDist = xDist + 20;
@@ -103,11 +103,14 @@ function drawChart() {
     var yDist = 16;
     Object.keys(selection.yLabel).forEach(d => {
         svg.append("text")
+            .data(d)
             .attr("transform", "rotate(-90)")
             .attr("text-anchor", "middle")
             .classed(selection.y == d ? 'active' : "inactive", true)
             .attr("y", yDist)
             .attr("x", -(chartHeight/2))
+            .attr("value", d)
+            .attr("axis", "y")
             .text(`${selection.yLabel[d]}`);
         
         yDist = yDist + 20;
@@ -135,12 +138,12 @@ function drawChart() {
         .attr("opacity", ".6");
 
     /* Create the text for each entry */
-    elemEnter.append("text")
+    var text = elemEnter.append("text")
         .attr("x", d => xScale(d[selection.x]))
         .attr("y", d => yScale(d[selection.y]))
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "middle")
-        .text(function(d){return d.abbr});
+        .text(function(d){return d.abbr});    
 
     var toolTip = d3.tip()
 	    .attr("class", "tooltip")
@@ -158,6 +161,20 @@ function drawChart() {
 		})
 		.on("mouseout", function(d, index) {
 		    toolTip.hide(d, this);
-		});
+	    });
 
+    d3.selectAll("text")
+    .on("click", function(d, i) {
+        var axis = d3.select(this).attr("axis");
+        var value = d3.select(this).attr("value");
+        console.log(axis, value);
+
+        if (axis == 'x') {
+            selection.x = value;
+        } else {
+            selection.y = value
+        }
+
+        drawResponsiveChart();
+    })
 }
