@@ -72,7 +72,7 @@ function drawResponsiveChart() {
 
     // scale x to chart width
     var xScale = d3.scaleBand()
-        .domain(dataAxisX)
+        .domain(dataAxisX.sort(d3.ascending))
         .range([0, chartWidth])
         .padding(0.5);
 
