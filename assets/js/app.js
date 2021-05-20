@@ -120,6 +120,11 @@ function drawResponsiveChart() {
     chartGroup.append("g")
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(xAxis);
+
+    // Append lines by quartiles
+    appendQuartiles(chartGroup, chartHeight, chartWidth, 0.25);
+    appendQuartiles(chartGroup, chartHeight, chartWidth, 0.5);
+    appendQuartiles(chartGroup, chartHeight, chartWidth, 0.75);
     
     /* Define the data for the circles */
     var elem = chartGroup.selectAll("circle")
@@ -177,4 +182,24 @@ function drawResponsiveChart() {
 
         drawResponsiveChart();
     })
+}
+
+function appendQuartiles(chartGroup, chartHeight, chartWidth, quartile) {
+    // Plot quartile in y axis
+    chartGroup.append('line')
+        .style("stroke", "darkgray")
+        .style("stroke-width", 1)
+        .attr("x1", 0)
+        .attr("y1", chartHeight*quartile)
+        .attr("x2", chartWidth)
+        .attr("y2", chartHeight*quartile);
+
+    // Plot quartile in x axis
+    chartGroup.append('line')
+        .style("stroke", "darkgray")
+        .style("stroke-width", 1)
+        .attr("x1", chartWidth*quartile)
+        .attr("y1", 0)
+        .attr("x2", chartWidth*quartile)
+        .attr("y2", chartHeight);
 }
